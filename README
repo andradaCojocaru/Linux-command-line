@@ -1,0 +1,71 @@
+// Cojocaru Andrada 322CA
+
+In realizarea acestei teme ne folosim de listele simplu inlantuite in
+structurile folosite: 
+- structura de director contine referinte catre nume, directorul parinte,
+primul element de tip fisier, primul element de tip director, urmatorul 
+director
+- structura de fisier contine referinta catre nume, directorul parinte,
+fisierul urmator
+
+TOUCH   - functia creeaza un fisier in directorul curent, folosind functia
+auxiliara find_file pentru a verifica daca fisierul se gaseste in ierarhia
+de fisiere
+	- se afiseaza mesajul "File already exists" in cazul in care fisierul
+exista deja in ierarhia de fisisere, respectiv se ataseaza fisierul nou la
+finalul alistei de fisiere, iar in cazul in care este primul, se modifica 
+variabila parent->head_children_file sa pointeze la acesta
+
+MKDIR 	- functia creeaza un director in directorul curent, folosind functia
+auxiliara find_file pentru a verifica daca directorul se gaseste in ierarhia
+de directoare
+        - se afiseaza mesajul "Director already exists" in cazul in care 
+directorul exista deja in ierarhia de directoare, respectiv se ataseaza 
+directorul nou la finalul listei de directoare, se initializeaza campurile 
+directorului, iar in cazul in care este primul,se modifica variabila 
+parent->head_children_director sa pointeze la acesta
+
+LS      - se afiseaza mai intai toate directoarele, apoi toate fisierele
+
+RM	- cautam fisierul si avem 3 cazuri:
+	1) se gaseste la inceput -> actualizam head_children_files
+	2) se gaseste la mijloc -> refacem legaturile intre vecinii acestuia
+	3) se gaseste la final -> fisierul *precedent pointeaza catre NULL
+	- eliberam memoria 
+ 
+RMDIR   - cautam directorul si avem aceleasi cazuri ca mai sus
+	- parcurgem tpoate fisierele sile stergem cu functia RM
+
+CD      - schimba directorul curent in directorul cu numele dat
+        - daca primim comanda "cd .." coboram un nivel in ierarhie
+        - daca comanda este alta, verificam daca exista directorul, in caz
+contrar afisam "No directories found!"; daca directorul exista, parcurgem ierarhia pana la gasirea acestuia si schimbam referinta target-ului cu acesta
+
+PWD     - afiseaza calea e la directorul radacina pana ala cel curent
+        - ne folosim de functia recursiva pentru a concatena sirurile si a le
+afisa in ordinea inversa
+
+STOP    - functia opreste aplicatia, dar are si rolul de a dezaloca memoria
+        - se parcurge ierarhia de directoare in paralel cu cea de fisiere si se
+dezaloca memoria treptat
+
+TREE	- afiseaza interiorul directorului curent intr-o forma arborescenta
+	- se parcurg toate directoarele parinte recursiv
+	- la iesirea din recursivitate se afiseaza toate directoarele, 
+respevctiv toate fisierele copil
+
+MV	- functia schimba numele directorului/fisierului cu newname, creeaza o
+noua instanta, ce se va adauga la finalul ierarhiei, vechia instanta va fi 
+stearsa
+	- verificam daca numele oldname apartine unui fisier/director, acelasi
+algoritm aplicam si pentru newname, verificanddaca instanta exista deja
+	- daca instanta care trebuie modificata este director, alocam memorie
+pentru un nou director, creem legaturile potrivite si modificam referintele
+la fisierele/directoarele copii, prin copierea dimn vechiul director
+	- dezalocam memoria vechiului director
+	- daca instanta cautata este un fisier lucrurile devin mai simple
+creem un fisier nou si il stergem pe cel vechi cu functiile create mai sus
+
+MAIN	- parsam tetxul dat in comenzi si fisiere/directoare
+	- preluam fiecare comanda pana cand iltalnim comanda "stop"
+	- dezalocam memoria
